@@ -16,6 +16,8 @@ const RootLayout = () => {
   const navigation = useNavigation();
   console.log("here", navigation.getId);
 
+  // router.navigate("/home");
+
   return (
     <>
       <ApplicationProvider {...eva} theme={eva.light}>

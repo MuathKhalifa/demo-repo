@@ -17,6 +17,7 @@ type iconNameType =
   | "stats-chart-outline";
 
 const TabsLayout = () => {
+  console.log("tabszz: ");
   return (
     <Tabs
       screenOptions={{

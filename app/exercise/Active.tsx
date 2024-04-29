@@ -25,9 +25,8 @@ const Active = () => {
   const exerciseList: any = params.exerciseList;
   let parsedExerciseList = JSON.parse(exerciseList);
   const [isOpen, setIsOpen] = useState(false);
-  console.log("list: ", parsedExerciseList);
 
-  // filter out any item that has a list of more than
+  // filter out any item that has a timer of more than 0.
   parsedExerciseList = parsedExerciseList.filter((item) => item.duration > 0);
 
   const [indexOfList, setIndexOfList] = useState(0);
@@ -45,8 +44,10 @@ const Active = () => {
   //     console.log("its zizo: ", time);
   //   }
 
+  // useEffect to move to the next stretch.
   useEffect(() => {
     const autoMoveToNext = () => {
+      // if stretch has ended, and we're not on the last stretch on the list.
       if (time == 0 && indexOfList < parsedExerciseList.length - 1) {
         const timeOut = setTimeout(() => {
           next();
@@ -62,15 +63,13 @@ const Active = () => {
         }, 1000);
 
         return () => clearTimeout(timeOut);
+      } else if (time == 0 && indexOfList == parsedExerciseList.length - 1) {
+        console.log("it's the last stretch");
       }
     };
     autoMoveToNext();
   }, [time]);
 
-  useEffect(() => {
-    let id = navigation.getId();
-    console.log("id: ", id);
-  }, [navigation]);
   function startCountDown() {
     startTimer();
   }
@@ -79,6 +78,7 @@ const Active = () => {
     stopTimer();
   }
 
+  //move to the next stretch
   function next() {
     if (indexOfList == parsedExerciseList.length - 1) {
       return;
@@ -94,6 +94,8 @@ const Active = () => {
     //
   }
 
+  //move to the prev stretch
+
   function back() {
     if (indexOfList == 0) {
       return;
@@ -106,7 +108,7 @@ const Active = () => {
   return (
     <View className="h-full bg-white">
       {isOpen && (
-        <Modal isOpen={true}>
+        <Modal isOpen={false}>
           <Text>G</Text>
           <View className="bg-white w-full p-4 rounded-xl">
             <TouchableOpacity
@@ -141,7 +143,7 @@ const Active = () => {
             {/* <Pressable className="bg-red-400 rounded-md py-3 items-center justify-center mt-3">
               <Text className="text-white text-md">Send Bug</Text>
             </Pressable> */}
-          </View>{" "}
+          </View>
         </Modal>
       )}
       <View className="w-full h-[40%]">
