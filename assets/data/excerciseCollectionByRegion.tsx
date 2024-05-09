@@ -38,7 +38,7 @@ export const AllExercises = {
       duration: 20,
     },
   },
-
+  //lower back
   lowerBack: {
     lowerBack1: {
       imgURL: require("../../assets/images/single.png"),
@@ -71,6 +71,8 @@ export const AllExercises = {
       duration: 20,
     },
   },
+
+  //shoulders
   shoulders: {
     sholders1: {
       imgURL: require("../../assets/images/flexing.png"),
@@ -115,7 +117,7 @@ export const AllExercises = {
       duration: 20,
     },
   },
-
+  //hamstring
   hamstring: {
     hamstring1: {
       imgURL: require("../../assets/images/flexing.png"),
@@ -133,6 +135,8 @@ export const AllExercises = {
       duration: 20,
     },
   },
+
+  //posture
   posture: {
     techNeck: {
       imgURL: require("../../assets/images/flexing.png"),
@@ -155,6 +159,8 @@ export const AllExercises = {
       duration: 20,
     },
   },
+
+  //core
   core: {
     core1: {
       imgURL: require("../../assets/images/background.jpg"),
