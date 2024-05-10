@@ -9,6 +9,7 @@ type SingleExerciseType = {
   custom?: boolean;
   customList?: String[];
   setCustomList?: (state: any) => void;
+  showToast: () => void;
 };
 
 function ExcerciseControls({ decreaseTime, increaseTime, name }) {
@@ -34,7 +35,12 @@ function ExcerciseControls({ decreaseTime, increaseTime, name }) {
   );
 }
 
-function CustomExcerciseControls({ setCustomList, customList, item }) {
+function CustomExcerciseControls({
+  setCustomList,
+  customList,
+  item,
+  showToast,
+}) {
   function addExerciseToCustomList() {
     const tempArr = customList;
 
@@ -43,7 +49,13 @@ function CustomExcerciseControls({ setCustomList, customList, item }) {
   }
   return (
     <View className=" flex-row mr-2 gap-x-5 h-10">
-      <TouchableOpacity onPress={addExerciseToCustomList} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => {
+          addExerciseToCustomList();
+          showToast();
+        }}
+        activeOpacity={0.8}
+      >
         <EvilIcons name="plus" size={36} color="green" />
       </TouchableOpacity>
     </View>
@@ -56,6 +68,7 @@ const SingleExercise = ({
   custom,
   customList,
   setCustomList,
+  showToast,
 }: SingleExerciseType) => {
   const { imgURL, name, duration } = item;
   return (
@@ -79,6 +92,7 @@ const SingleExercise = ({
           setCustomList={setCustomList}
           customList={customList}
           item={item}
+          showToast={showToast}
         />
       )}
     </View>

@@ -84,7 +84,7 @@ const ExercisePage = () => {
 
   function increaseTime(name: string) {
     let tempArr = [...Data[exerciseRegion]];
-    tempArr.map((item) => {
+    tempArr.map((item, index) => {
       if (name == item.name) {
         item.duration += 5;
       }

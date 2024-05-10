@@ -13,6 +13,8 @@ import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { parse } from "expo-linking";
 import { useCountDown } from "../../customHooks/useCountDown";
 import Modal from "../(tabs)/profile/Modal";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+
 import { Card } from "@ui-kitten/components";
 type JsonObjectType = {
   name: String;
@@ -47,14 +49,12 @@ const Active = () => {
   // useEffect to move to the next stretch.
   useEffect(() => {
     const autoMoveToNext = () => {
-      // if stretch has ended, and we're not on the last stretch on the list.
-      if (time == 0 && indexOfList < parsedExerciseList.length - 1) {
+      if (time == 0 && indexOfList == parsedExerciseList.length - 1) {
+        console.log("last excercise");
+        router.navigate("/exercise/finished");
+      } else if (time == 0 && indexOfList < parsedExerciseList.length - 1) {
         const timeOut = setTimeout(() => {
           next();
-
-          setTimeout(() => {
-            setIsOpen(true);
-          }, 3000);
 
           // setIndexOfList((index) => index + 1);
           // console.log("init time from inside: ", initialTime);
@@ -70,6 +70,9 @@ const Active = () => {
     autoMoveToNext();
   }, [time]);
 
+  useEffect(() => {
+    let id = navigation.getId();
+  }, [navigation]);
   function startCountDown() {
     startTimer();
   }
@@ -117,9 +120,7 @@ const Active = () => {
                 setIsOpen(false);
               }}
               className="absolute right-5 top-2  z-10 "
-            >
-              {/* <Text>X</Text> */}
-            </TouchableOpacity>
+            ></TouchableOpacity>
             <View className="mb-4 gap-1">
               <Text>Send bugs</Text>
               <Text className="text-gray-500">
@@ -140,9 +141,6 @@ const Active = () => {
                 style={{ textAlignVertical: "top" }}
               />
             </View>
-            {/* <Pressable className="bg-red-400 rounded-md py-3 items-center justify-center mt-3">
-              <Text className="text-white text-md">Send Bug</Text>
-            </Pressable> */}
           </View>
         </Modal>
       )}
@@ -191,7 +189,7 @@ const Active = () => {
                   setActive(false);
                 }}
               >
-                <Feather name="pause" size={36} color="red" />
+                <Feather name="pause" size={50} color="red" />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -201,7 +199,7 @@ const Active = () => {
                 }}
                 activeOpacity={1}
               >
-                <Feather name="play" size={36} color="black" />
+                <Feather name="play" size={50} color="#12BEF6" />
               </TouchableOpacity>
             )}
           </Text>

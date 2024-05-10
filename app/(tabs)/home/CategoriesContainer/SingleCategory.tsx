@@ -20,6 +20,7 @@ type SingleCategoryProps = {
   rounded?: boolean;
 };
 
+//
 const SingleCategory = ({
   imgURL,
   exerciseRegion,

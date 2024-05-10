@@ -11,7 +11,7 @@ const bookMarkLayout = () => {
         options={{
           headerShown: false,
           // headerTitle: "dd",
-          presentation: "fullScreenModal",
+          // presentation: "fullScreenModal",
         }}
       />
     </Stack>

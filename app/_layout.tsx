@@ -10,6 +10,7 @@ import {
   useLocalSearchParams,
   useNavigation,
 } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const RootLayout = () => {
   const params = useLocalSearchParams();
@@ -20,6 +21,8 @@ const RootLayout = () => {
 
   return (
     <>
+      <Toast />
+
       <ApplicationProvider {...eva} theme={eva.light}>
         <Stack>
           <Stack.Screen

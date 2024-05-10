@@ -1,94 +1,59 @@
-import { View, Text, SectionList } from "react-native";
 import React, { useState } from "react";
+import {
+  View,
+  Text,
+  SectionList,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { AllExercises } from "../../../../assets/data/excerciseCollectionByRegion";
-import SingleCategory from "../../home/CategoriesContainer/SingleCategory";
 import SingleExercise from "../../../exercise/SingleExercise";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
-import { Avatar, Layout, Popover, Button } from "@ui-kitten/components";
+import Toast from "react-native-toast-message";
 
-type tempObjType = {
-  title: string;
-  data: any[];
-};
-
-const index = () => {
-  const [visible, setVisible] = useState<boolean>();
+const Index = () => {
   const [customList, setCustomList] = useState([]);
-  const categories = Object.keys(AllExercises);
-  //   console.log("Ex: ", AllExercises);
 
-  const renderToggleButton = (): React.ReactElement => (
-    <Button onPress={() => setVisible(true)}>TOGGLE POPOVER</Button>
-  );
-
-  let arr: any = [];
-
-  categories.forEach((category) => {
-    let dataArr = [];
-
-    const exercises = Object.keys(AllExercises[category]);
-
-    let tempObj;
-    exercises.forEach((exercise) => {
-      const { imgURL, name, duration } = AllExercises[category][exercise];
-      dataArr.push({ imgURL, name, duration });
-      // Now you can use imgURL, n  ame, and duration for each exercise
-      //   console.log(
-      //     `Category: ${category}, Exercise: ${name}, Duration: ${duration}`
-      //   );
-
-      //   console.log("inside: ", AllExercises[category][exercise]);
-
-      tempObj = {
-        title: category,
-        data: dataArr,
-        // data: [JSON.stringify([AllExercises[category][exercise]])],
-      };
+  const showToast = () => {
+    Toast.show({
+      visibilityTime: 500,
+      type: "success",
+      text1: "Great!",
+      text2: "Exercise Added 👋",
+      text1Style: { fontSize: 16 },
+      text2Style: { fontSize: 13 },
     });
-    arr.push(tempObj);
-  });
+  };
 
-  console.log("customList: ", customList);
-
-  //   arr = JSON.stringify(arr);
-
-  //   console.log("test: ", JSON.stringify(arr));
+  console.log("custom: ", customList);
 
   return (
-    <View className="bg-white">
-      <Popover
-        visible={visible}
-        anchor={renderToggleButton}
-        onBackdropPress={() => setVisible(false)}
-      >
-        <View className="border-4 bg-red-400 ">
-          <Avatar source={require("../../../../assets/images/single.png")} />
-          <Text>Welcome to UI Kitten 😻</Text>
-        </View>
-      </Popover>
+    <SafeAreaView className="bg-white top-8">
       <SectionList
-        sections={arr}
+        className="mb-10"
+        sections={AllExercises}
         renderSectionHeader={({ section }) => (
           <Text className="h-10 text-lg font-bold text-center pt-2">
             {section.title}
           </Text>
         )}
-        renderItem={({ item, section }) => {
-          return (
-            <>
-              <SingleExercise
-                item={item}
-                custom={true}
-                customList={customList}
-                setCustomList={setCustomList}
-              />
-            </>
-          );
-        }}
+        renderItem={({ item, index }) => (
+          <SingleExercise
+            item={item}
+            custom={true}
+            customList={customList}
+            setCustomList={setCustomList}
+            showToast={showToast}
+          />
+        )}
+        ListFooterComponent={() => (
+          <TouchableOpacity className="w-60 mx-auto py-3 border border-blue-500 my-2 flex items-center justify-center rounded-md">
+            <Text className="text-blue-500 text-md">Create</Text>
+          </TouchableOpacity>
+        )}
       />
-      <Text>index</Text>
-    </View>
+      <Toast />
+    </SafeAreaView>
   );
 };
 
-export default index;
+export default Index;
