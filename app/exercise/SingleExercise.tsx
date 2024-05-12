@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { EvilIcons } from "@expo/vector-icons";
+import { excerciseCollectionByRegion as Data } from "../../assets/data/excerciseCollectionByRegion";
 
 type SingleExerciseType = {
   item: any;
@@ -9,7 +10,7 @@ type SingleExerciseType = {
   custom?: boolean;
   customList?: String[];
   setCustomList?: (state: any) => void;
-  showToast: () => void;
+  showToast?: () => void;
 };
 
 function ExcerciseControls({ decreaseTime, increaseTime, name }) {
@@ -45,6 +46,7 @@ function CustomExcerciseControls({
     const tempArr = customList;
 
     console.log("item: ", item);
+
     setCustomList((prevItems) => [...prevItems, item]);
   }
   return (
@@ -63,13 +65,50 @@ function CustomExcerciseControls({
 }
 const SingleExercise = ({
   item,
-  increaseTime,
+  // increaseTime,
   decreaseTime,
   custom,
   customList,
   setCustomList,
   showToast,
 }: SingleExerciseType) => {
+  //
+  function increaseTime(name: string) {
+    let tempArr = item;
+    item.duration += 5;
+    console.log("temop: ", tempArr);
+    // tempArr.map((item, index) => {
+    //   if (name == item.name) {
+    //     item.duration += 5;
+    //   }
+    // });
+
+    // const newTime = tempArr.reduce((totalDuration, exercise) => {
+    //   return totalDuration + exercise.duration;
+    // }, 0);
+    // setTime(newTime);
+    //
+  }
+
+  //decreases Time for an individual exercise
+  // function decreaseTime(name: string) {
+  //   //
+
+  //   let tempArr = [...Data[exerciseRegion]];
+  //   tempArr.map((item) => {
+  //     if (name == item.name) {
+  //       if (item.duration == 0) return;
+  //       item.duration -= 5;
+  //     }
+  //   });
+
+  //   const newTime = tempArr.reduce((totalDuration, exercise) => {
+  //     return totalDuration + exercise.duration;
+  //   }, 0);
+
+  //   setTime(newTime);
+  // }
+
   const { imgURL, name, duration } = item;
   return (
     <View className=" bg-white   flex flex-row h-20 justify-between items-center border  border-gray-100 rounded-lg ">

@@ -8,7 +8,7 @@ import {
   ImageSourcePropType,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { excerciseCollectionByRegion as Data } from "../../assets/data/excerciseCollectionByRegion";
 import SingleExercise from "./SingleExercise";
 import { isCallSignatureDeclaration } from "typescript";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //partial maps over all the property of the Type and adds an optional type to all of them
 // This is ok, because I'm recieivng this object not settings it.
 type SingleCategoryProps = Partial<{
@@ -56,23 +57,34 @@ function StartExerciseButton({ exerciseList }) {
 
 const ExercisePage = () => {
   const item = useLocalSearchParams();
-  const {
-    color,
-    imgURL,
-    exerciseRegion,
-    height,
-    width,
-    exerciseDuration,
-    exerciseName,
-    rounded,
-  }: SingleCategoryProps = item;
+
+  const { exerciseRegion }: SingleCategoryProps = item;
+  const [data, setData] = useState<any>(Data[exerciseRegion]);
+  console.log("item: ", item);
+  console.log("region: ", exerciseRegion);
+
+  async function getCustomList() {
+    try {
+      let list: any = await AsyncStorage.getItem("customE");
+      list = JSON.parse(list);
+
+      setData(list);
+    } catch (error) {}
+  }
+  //this means that it's a custom, fix logic later
+  useEffect(() => {
+    if (!exerciseRegion) {
+      getCustomList();
+    }
+  }, []);
 
   // console.log("item: ", item);
 
   // if the excercise does not exist leave function.
-  if (!Data[exerciseRegion]) {
-    return;
-  }
+  // if (!Data[exerciseRegion]) {
+  //   console.log("returinig");
+  //   return;
+  // }
 
   const [totaltime, setTime] = useState(
     Data[exerciseRegion].reduce((totalDuration, exercise) => {
@@ -145,7 +157,7 @@ const ExercisePage = () => {
         <View className="flex-1 ">
           <SafeAreaView className="flex-1 ">
             <FlatList
-              data={Data[exerciseRegion]}
+              data={data}
               className="  "
               style={{ paddingBottom: 10 }}
               showsHorizontalScrollIndicator={false}

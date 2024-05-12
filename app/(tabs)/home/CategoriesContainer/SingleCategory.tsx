@@ -10,13 +10,13 @@ import React from "react";
 import { router, useNavigation } from "expo-router";
 
 type SingleCategoryProps = {
-  imgURL: ImageSourcePropType;
-  exerciseRegion: String;
+  imgURL?: ImageSourcePropType;
+  exerciseRegion?: String;
   exerciseName?: String;
   exerciseDuration?: Number;
-  color: string;
-  width: number;
-  height: number;
+  color?: string;
+  width?: number;
+  height?: number;
   rounded?: boolean;
 };
 
@@ -61,7 +61,9 @@ const SingleCategory = ({
             height: height,
             borderRadius: rounded ? 100 : 10,
           }}
-          className=" w-[135px] h-[125px] flex justify-center items-center  mx-1 my-2  bg-red-400  "
+          className={
+            " w-full h-[125px] flex justify-center items-center mx-1   my-2  bg-red-400 "
+          }
         >
           <View className=" w-full items-center  ">
             <Image className="flex-shrink-0 w-full h-full " source={imgURL} />

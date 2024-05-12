@@ -14,7 +14,7 @@ import * as eva from "@eva-design/eva";
 const home = () => {
   return (
     <View className="bg-[#F8F3FF] h-full  ">
-      {/* <Redirect href="bookmark/custom/" /> */}
+      {/* <Redirect href="bookmark/custom/2" /> */}
       <ScrollView className="">
         <SafeAreaView className="mx-0">
           <View className="flex-1  w-full z-20 ">

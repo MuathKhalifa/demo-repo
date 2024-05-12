@@ -8,7 +8,7 @@ import Toast from "react-native-toast-message";
 const index = () => {
   return (
     <>
-      <Redirect href="/bookmark/custom" />
+      <Redirect href="/home" />
     </>
   );
 };

@@ -9,6 +9,7 @@ import {
 import { AllExercises } from "../../../../assets/data/excerciseCollectionByRegion";
 import SingleExercise from "../../../exercise/SingleExercise";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Index = () => {
   const [customList, setCustomList] = useState([]);
@@ -24,6 +25,17 @@ const Index = () => {
     });
   };
 
+  async function createCustomExercise() {
+    // try {
+    //   const item = await AsyncStorage.setItem(
+    //     "customE",
+    //     JSON.stringify(customList)
+    //   );
+    //   console.log("item: ", item);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  }
   console.log("custom: ", customList);
 
   return (
@@ -46,7 +58,10 @@ const Index = () => {
           />
         )}
         ListFooterComponent={() => (
-          <TouchableOpacity className="w-60 mx-auto py-3 border border-blue-500 my-2 flex items-center justify-center rounded-md">
+          <TouchableOpacity
+            onPress={createCustomExercise}
+            className="w-60 mx-auto py-3 border border-blue-500 my-2 flex items-center justify-center rounded-md"
+          >
             <Text className="text-blue-500 text-md">Create</Text>
           </TouchableOpacity>
         )}

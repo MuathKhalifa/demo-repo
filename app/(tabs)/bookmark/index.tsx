@@ -1,9 +1,18 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+} from "react-native";
+import React, { useEffect } from "react";
 import { Button, Card } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SingleCategory from "../home/CategoriesContainer/SingleCategory";
 
 const Footer = (): React.ReactElement => (
   <View
@@ -18,14 +27,23 @@ const Footer = (): React.ReactElement => (
 );
 
 const BookMark = () => {
+  // useEffect(() => {
+  //   const getList = async () => {
+  //     const excercise = await AsyncStorage.getItem("customE");
+
+  //     console.log("excerciseL: ", excercise);
+  //   };
+
+  //   getList();
+  // }, []);
   return (
-    <View className=" h-full bg-white flex-row  ">
+    <SafeAreaView className=" h-full bg-white   ">
       <TouchableOpacity
         onPress={() => {
           console.log("whole");
           router.navigate("/bookmark/custom");
         }}
-        className=" border-gray-300  h-40  flex-1 mt-28 mx-4 rounded-3xl relative border-2"
+        className=" border-gray-300  h-40   mt-28 mx-4 rounded-3xl relative border-2"
       >
         <View className="items-center top-5">
           <Ionicons
@@ -49,7 +67,30 @@ const BookMark = () => {
           </Text>
         </View>
       </TouchableOpacity>
-    </View>
+
+      {/* custom List */}
+      <View className="mx-4 mt-10">
+        <SingleCategory
+          imgURL={require("../../../assets/images/man-stretching.jpg")}
+          height={125}
+        />
+      </View>
+      {/* <TouchableOpacity
+        onPress={() => {
+          console.log("whole");
+          const id = { id: 2 };
+
+          router.navigate({ pathname: `/exercise`, params: { id: 2 } }); // Remove the braces in params
+        }}
+        className="border-black  h-40   mt-28 mx-4 rounded-3xl  border p-3 relative"
+      >
+        <Image
+          className="flex-shrink-0 w-1/2 h-full"
+          source={require("../../../assets/images/man-stretching.jpg")}
+        />
+        <Text className="absolute bottom-2  text-lg  right-20">Custom One</Text>
+      </TouchableOpacity> */}
+    </SafeAreaView>
   );
 };
 
