@@ -63,6 +63,7 @@ const ExercisePage = () => {
   console.log("item: ", item);
   console.log("region: ", exerciseRegion);
 
+  // get user created custom list from local storage
   async function getCustomList() {
     try {
       let list: any = await AsyncStorage.getItem("customE");
@@ -71,7 +72,8 @@ const ExercisePage = () => {
       setData(list);
     } catch (error) {}
   }
-  //this means that it's a custom, fix logic later
+
+  //this means that it's a custom, fix logic later, logic IS BAAAAAAAAD!
   useEffect(() => {
     if (!exerciseRegion) {
       getCustomList();
@@ -86,9 +88,10 @@ const ExercisePage = () => {
   //   return;
   // }
 
+  // calculates the Total Time that goes on the header.
   const [totaltime, setTime] = useState(
     Data[exerciseRegion].reduce((totalDuration, exercise) => {
-      return totalDuration + exercise.duration;
+      return totalDuration + exercise.duration + 10;
     }, 0)
   );
 
@@ -136,6 +139,7 @@ const ExercisePage = () => {
           Lower back excercise is importing for daily activities such as bending
         </Text>
       </View>
+      {/* header */}
       <View className="bg-white self-start flex-row">
         <View className="flex-row w-32  items-center justify-center px-2 py-2 rounded-md bg-[#DCF1FE]">
           <Text className="right-3">
@@ -152,6 +156,8 @@ const ExercisePage = () => {
           </Text>
         </View>
       </View>
+
+      {/* excercises */}
       <View className="border-2 flex-1 border-yellow-50 ">
         <Text className="font-bold text-[16px] mt-2">Stretches</Text>
         <View className="flex-1 ">
