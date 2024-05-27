@@ -20,7 +20,8 @@ type SingleCategoryProps = {
   rounded?: boolean;
 };
 
-//
+// This when clicked, a list of excercises open up.
+
 const SingleCategory = ({
   imgURL,
   exerciseRegion,
@@ -31,20 +32,24 @@ const SingleCategory = ({
   height,
   rounded,
 }: SingleCategoryProps) => {
+  // the props is how the category to-be-clicked should look like.
   //Argument of type '[string, { item: string; }]' is not assignable to parameter of type 'never'.ts(2345)
 
   const navigation = useNavigation<any>();
 
   const item = {
-    imgURL,
     exerciseRegion,
-    exerciseName,
-    exerciseDuration,
-    color,
-    width,
-    height,
-    rounded,
   };
+  // const item = {
+  //   imgURL,
+  //   exerciseRegion,
+  //   exerciseName,
+  //   exerciseDuration,
+  //   color,
+  //   width,
+  //   height,
+  //   rounded,
+  // };
   return (
     <View className=" ">
       <TouchableOpacity

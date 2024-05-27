@@ -65,60 +65,23 @@ function CustomExcerciseControls({
 }
 const SingleExercise = ({
   item,
-  // increaseTime,
+  increaseTime,
   decreaseTime,
   custom,
   customList,
   setCustomList,
   showToast,
 }: SingleExerciseType) => {
-  //
-  function increaseTime(name: string) {
-    let tempArr = item;
-    item.duration += 5;
-    console.log("temop: ", tempArr);
-    // tempArr.map((item, index) => {
-    //   if (name == item.name) {
-    //     item.duration += 5;
-    //   }
-    // });
-
-    // const newTime = tempArr.reduce((totalDuration, exercise) => {
-    //   return totalDuration + exercise.duration;
-    // }, 0);
-    // setTime(newTime);
-    //
-  }
-
-  //decreases Time for an individual exercise
-  // function decreaseTime(name: string) {
-  //   //
-
-  //   let tempArr = [...Data[exerciseRegion]];
-  //   tempArr.map((item) => {
-  //     if (name == item.name) {
-  //       if (item.duration == 0) return;
-  //       item.duration -= 5;
-  //     }
-  //   });
-
-  //   const newTime = tempArr.reduce((totalDuration, exercise) => {
-  //     return totalDuration + exercise.duration;
-  //   }, 0);
-
-  //   setTime(newTime);
-  // }
-
   const { imgURL, name, duration } = item;
   return (
-    <View className=" bg-white   flex flex-row h-20 justify-between items-center border  border-gray-100 rounded-lg ">
-      <View className="h-16  w-20 border border-gray-100 rounded-lg">
-        <Image source={item.imgURL} className="w-full h-full" />
+    <View className=" bg-white  flex flex-row h-20 justify-between items-center rounded-lg border border-gray-50">
+      <View className="h-full m-1   w-24 rounded-lg ">
+        <Image source={imgURL} className="w-full h-full" />
       </View>
       <View className="flex-col gap-1 pl-2 right-12">
-        <Text>{item.name}</Text>
+        <Text>{name}</Text>
 
-        <Text className="text-gray-400">{item.duration} minutes</Text>
+        <Text className="text-gray-400">{duration} minutes</Text>
       </View>
       {!custom ? (
         <ExcerciseControls

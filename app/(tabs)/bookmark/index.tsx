@@ -26,6 +26,47 @@ const Footer = (): React.ReactElement => (
   </View>
 );
 
+type CustomButtonType = {
+  navigateTo: string;
+  title: string;
+  iconName: any;
+  iconsSize: number;
+  iconColour: string;
+};
+
+const CustomButton = ({
+  navigateTo,
+  title,
+  iconName,
+  iconsSize,
+  iconColour,
+}: CustomButtonType) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        console.log("Button pressed");
+        router.navigate(navigateTo);
+      }}
+      className="border-gray-300 h-40 mt-28 mx-4 rounded-3xl relative border-2"
+    >
+      <View className="items-center top-5">
+        <Ionicons name={iconName} size={iconsSize} color={iconColour} />
+      </View>
+      <View className="absolute bottom-2 items-center w-full z-40">
+        <Text className="text-lg font-bold text-center">{title}</Text>
+        <Text className="text-center text-gray-600 text-[15px]">
+          Tap
+          <MaterialCommunityIcons
+            name="gesture-double-tap"
+            size={16}
+            color="black"
+          />
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const BookMark = () => {
   // useEffect(() => {
   //   const getList = async () => {
@@ -38,41 +79,20 @@ const BookMark = () => {
   // }, []);
   return (
     <SafeAreaView className=" h-full bg-white   ">
-      <TouchableOpacity
-        onPress={() => {
-          console.log("whole");
-          router.navigate("/bookmark/custom");
-        }}
-        className=" border-gray-300  h-40   mt-28 mx-4 rounded-3xl relative border-2"
-      >
-        <View className="items-center top-5">
-          <Ionicons
-            className=""
-            name="create-outline"
-            size={50}
-            color="black"
-          />
-        </View>
-        <View className="absolute bottom-2 items-center w-full z-40">
-          <Text className="text-lg font-bold text-center">
-            Create Your Own Routine
-          </Text>
-          <Text className="text-center text-gray-600 text-[15px]">
-            Tap
-            <MaterialCommunityIcons
-              name="gesture-double-tap"
-              size={16}
-              color="black"
-            />
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <CustomButton
+        iconColour="black"
+        iconName="create-outline"
+        iconsSize={50}
+        navigateTo="/bookmark/custom"
+        title="Create Your Own Routine"
+      />
 
       {/* custom List */}
       <View className="mx-4 mt-10">
         <SingleCategory
           imgURL={require("../../../assets/images/man-stretching.jpg")}
           height={125}
+          exerciseRegion={"lowerBack"}
         />
       </View>
       {/* <TouchableOpacity

@@ -10,7 +10,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
+import * as SQLite from "react-native-sqlite-storage";
 
+const db = SQLite.OpenDatabase(
+  {
+    name: "MainDB",
+    location: "default",
+  },
+  () => {},
+  (error) => {
+    console.log(error);
+  }
+);
 const home = () => {
   return (
     <View className="bg-[#F8F3FF] h-full  ">

@@ -15,21 +15,12 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { excerciseCollectionByRegion as Data } from "../../assets/data/excerciseCollectionByRegion";
+import { excerciseCollectionById } from "../../assets/data/excerciseCollectionByRegion";
 import SingleExercise from "./SingleExercise";
 import { isCallSignatureDeclaration } from "typescript";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //partial maps over all the property of the Type and adds an optional type to all of them
 // This is ok, because I'm recieivng this object not settings it.
-type SingleCategoryProps = Partial<{
-  imgURL: ImageSourcePropType;
-  exerciseRegion: "lowerBack";
-  exerciseName: String;
-  exerciseDuration: Number;
-  color: string;
-  width: number;
-  height: number;
-  rounded: boolean;
-}>;
 
 function StartExerciseButton({ exerciseList }) {
   const router = useRouter();
@@ -55,11 +46,13 @@ function StartExerciseButton({ exerciseList }) {
   );
 }
 
+// this screen lists the excercises in the <singleCategory/> with total time + description and start button
+
 const ExercisePage = () => {
   const item = useLocalSearchParams();
 
-  const { exerciseRegion }: SingleCategoryProps = item;
-  const [data, setData] = useState<any>(Data[exerciseRegion]);
+  const { exerciseRegion }: Partial<{ exerciseRegion: string }> = item;
+  const [data, setData] = useState<any>(excerciseCollectionById["2321"]);
   console.log("item: ", item);
   console.log("region: ", exerciseRegion);
 
@@ -91,7 +84,7 @@ const ExercisePage = () => {
   // calculates the Total Time that goes on the header.
   const [totaltime, setTime] = useState(
     Data[exerciseRegion].reduce((totalDuration, exercise) => {
-      return totalDuration + exercise.duration + 10;
+      return totalDuration + exercise.duration;
     }, 0)
   );
 
@@ -133,13 +126,15 @@ const ExercisePage = () => {
 
   return (
     <View className=" bg-white h-full pl-2 pt-2">
+      {/* header */}
       <View className=" mb-2">
         <Text className="text-[20px]">Category name</Text>
         <Text className="text-gray-500">
           Lower back excercise is importing for daily activities such as bending
         </Text>
       </View>
-      {/* header */}
+
+      {/* Total Time + region */}
       <View className="bg-white self-start flex-row">
         <View className="flex-row w-32  items-center justify-center px-2 py-2 rounded-md bg-[#DCF1FE]">
           <Text className="right-3">
@@ -157,9 +152,10 @@ const ExercisePage = () => {
         </View>
       </View>
 
-      {/* excercises */}
-      <View className="border-2 flex-1 border-yellow-50 ">
-        <Text className="font-bold text-[16px] mt-2">Stretches</Text>
+      {/* excercise List */}
+      <View className="flex-1">
+        {/* title */}
+        <Text className="font-bold text-[16px] mt-2 top-2">Stretches</Text>
         <View className="flex-1 ">
           <SafeAreaView className="flex-1 ">
             <FlatList

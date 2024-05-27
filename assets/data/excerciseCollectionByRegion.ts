@@ -49,6 +49,7 @@ export const AllExercises = [
   },
   {
     title: "Lower Back",
+    id: 2321,
     data: [
       {
         id: 21,
@@ -225,6 +226,13 @@ export const AllExercises = [
 
 export const excerciseCollectionByRegion = {
   lowerBack: AllExercises.find((group) => group.title === "Lower Back").data,
+  neck: AllExercises.find((group) => group.title === "Neck").data,
+  posture: AllExercises.find((group) => group.title === "Posture").data,
+  core: AllExercises.find((group) => group.title === "Core").data,
+  hamstring: AllExercises.find((group) => group.title === "Hamstring").data,
+};
+export const excerciseCollectionById = {
+  2321: AllExercises.find((group) => group.title === "Lower Back").data,
   neck: AllExercises.find((group) => group.title === "Neck").data,
   posture: AllExercises.find((group) => group.title === "Posture").data,
   core: AllExercises.find((group) => group.title === "Core").data,
