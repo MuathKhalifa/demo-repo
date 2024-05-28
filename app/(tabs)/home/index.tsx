@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, FlatList } from "react-native";
-import React from "react";
+import { View, Text, ScrollView, FlatList, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Link, Redirect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import ProfileHeader from "./ProfileHeader";
@@ -10,19 +10,54 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
-import * as SQLite from "react-native-sqlite-storage";
+import * as SQLite from "expo-sqlite";
 
-const db = SQLite.OpenDatabase(
-  {
-    name: "MainDB",
-    location: "default",
-  },
-  () => {},
-  (error) => {
-    console.log(error);
-  }
-);
 const home = () => {
+  const db = SQLite.openDatabase("mydb.db");
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentName, setCurrentName] = useState<string>();
+  const [names, setNames] = useState<string[]>([]);
+
+  if (isLoading) {
+    return (
+      <>
+        <View className="w-full h-full justify-center items-center">
+          <Text>Loading...</Text>
+        </View>
+      </>
+    );
+  }
+
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXIST names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
+      );
+    });
+
+    try {
+      db.transaction((tx) => {
+        tx.executeSql("SELECT * FROM names", null, (txObj, resultSet) =>
+          setNames(resultSet.rows._array)
+        );
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  return (
+    <View className="w-full h-full justify-center items-center">
+      <TextInput
+        value={currentName}
+        placeholder="name"
+        onChangeText={setCurrentName}
+      />
+    </View>
+  );
+
   return (
     <View className="bg-[#F8F3FF] h-full  ">
       {/* <Redirect href="bookmark/custom/2" /> */}
