@@ -11,10 +11,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
 import * as SQLite from "expo-sqlite";
-
+import { AllExercises } from "../../../assets/data/excerciseCollectionByRegion";
+import { G } from "react-native-svg";
 const home = () => {
-  const db = SQLite.openDatabase("mydb.db");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentName, setCurrentName] = useState<string>();
   const [names, setNames] = useState<string[]>([]);
 
@@ -29,24 +29,119 @@ const home = () => {
   }
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "CREATE TABLE IF NOT EXIST names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
-      );
-    });
+    const opendb = async () => {
+      console.log("herexxx:");
+      let db: SQLite.SQLiteDatabase;
+      try {
+        db = await SQLite.openDatabaseAsync("excercises");
 
-    try {
-      db.transaction((tx) => {
-        tx.executeSql("SELECT * FROM names", null, (txObj, resultSet) =>
-          setNames(resultSet.rows._array)
-        );
-      });
-    } catch (error) {
-      console.error(error);
-    }
+        await db.execAsync(`
+        PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS regions (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL UNIQUE);
+        CREATE TABLE IF NOT EXISTS version (version INTEGER NOT NULL UNIQUE);
 
-    setIsLoading(false);
+        
+        `);
+        await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS exercises (
+          id INTEGER PRIMARY KEY NOT NULL, 
+          regionId INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          duration INTEGER NOT NULL,
+          imgURL TEXT NOT NULL,
+          FOREIGN KEY (regionId) REFERENCES regions(id)
+          );
+          `);
+
+        await insertData(db);
+
+        // const del = await db.runAsync("delete FROM exercises");
+        // const del = await db.runAsync("delete FROM version");
+
+        const allRows = await db.getAllAsync("SELECT * FROM exercises");
+
+        // console.log("all: ", allRows);
+        // for (const row of allRows) {
+        //   console.log(row);
+        // }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const insertData = async (db: SQLite.SQLiteDatabase) => {
+      try {
+        const version: any = await db.getAllAsync(`SELECT * FROM version`);
+
+        if (version[0].version >= 1) {
+          return;
+        }
+        await db.execAsync("INSERT  INTO version (version) VALUES(1)");
+
+        return;
+        AllExercises.forEach((exerciseGroup) => {
+          exerciseGroup.data.forEach(async (exercise) => {
+            try {
+              const back = await db.runAsync(
+                `
+                INSERT OR IGNORE INTO regions (title) VALUES (?)
+              `,
+                exerciseGroup.title
+              );
+              console.log("back: ", back);
+            } catch (error) {
+              console.error(error);
+            }
+
+            try {
+              const res = await db.runAsync(
+                `INSERT INTO exercises (regionId, name, duration, imgURL)
+                   VALUES (
+                     ?,
+                     ?, 
+                     ?, 
+                     ?
+                   )`,
+                [
+                  exerciseGroup.title,
+                  exercise.name,
+                  exercise.duration,
+                  exercise.imgURL,
+                ]
+              );
+            } catch (error) {
+              console.error(error);
+            }
+          });
+        });
+      } catch (error) {
+        console.log("errrrrrrrrrrrrrrx");
+        console.error(error);
+      }
+    };
+
+    opendb();
   }, []);
+
+  // useEffect(() => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       "CREATE TABLE IF NOT EXIST names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
+  //     );
+  //   });
+
+  //   try {
+  //     db.transaction((tx) => {
+  //       tx.executeSql("SELECT * FROM names", null, (txObj, resultSet) =>
+  //         setNames(resultSet.rows._array)
+  //       );
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   setIsLoading(false);
+  // }, []);
 
   return (
     <View className="w-full h-full justify-center items-center">
