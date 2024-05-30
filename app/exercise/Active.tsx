@@ -15,7 +15,6 @@ import { useCountDown } from "../../customHooks/useCountDown";
 import Modal from "../(tabs)/profile/Modal";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
-import { Card } from "@ui-kitten/components";
 type JsonObjectType = {
   name: String;
 };

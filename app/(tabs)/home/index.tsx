@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, FlatList, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, version } from "react";
 import { Link, Redirect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import ProfileHeader from "./ProfileHeader";
@@ -36,86 +36,38 @@ const home = () => {
         db = await SQLite.openDatabaseAsync("excercises");
 
         await db.execAsync(`
-        PRAGMA journal_mode = WAL;
-        CREATE TABLE IF NOT EXISTS regions (id INTEGER PRIMARY KEY NOT NULL, title TEXT NOT NULL UNIQUE);
-        CREATE TABLE IF NOT EXISTS version (version INTEGER NOT NULL UNIQUE);
-
-        
-        `);
-        await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS exercises (
-          id INTEGER PRIMARY KEY NOT NULL, 
-          regionId INTEGER NOT NULL,
-          name TEXT NOT NULL,
-          duration INTEGER NOT NULL,
-          imgURL TEXT NOT NULL,
-          FOREIGN KEY (regionId) REFERENCES regions(id)
+          PRAGMA journal_mode = WAL;
+          CREATE TABLE IF NOT EXISTS regions (
+            id INTEGER PRIMARY KEY NOT NULL,
+            title TEXT NOT NULL UNIQUE
           );
-          `);
+          CREATE TABLE IF NOT EXISTS exercises (
+            id INTEGER PRIMARY KEY NOT NULL, 
+            regionId INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            duration INTEGER NOT NULL,
+            imgURL TEXT NOT NULL,
+            FOREIGN KEY (regionId) REFERENCES regions(id)
+          );
+          CREATE TABLE IF NOT EXISTS version (
+            version INTEGER NOT NULL UNIQUE
+          );
+        `);
 
-        await insertData(db);
+        // await checkAndInitializeDatabase(db);
 
         // const del = await db.runAsync("delete FROM exercises");
-        // const del = await db.runAsync("delete FROM version");
+        // const delx = await db.runAsync("delete FROM version");
+        // const delc = await db.runAsync("delete FROM regions");
 
         const allRows = await db.getAllAsync("SELECT * FROM exercises");
-
+        const verions = await db.getAllAsync("SELECT * FROM version");
+        // console.log("version: ", verions);
         // console.log("all: ", allRows);
-        // for (const row of allRows) {
-        //   console.log(row);
-        // }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const insertData = async (db: SQLite.SQLiteDatabase) => {
-      try {
-        const version: any = await db.getAllAsync(`SELECT * FROM version`);
-
-        if (version[0].version >= 1) {
-          return;
+        for (const row of allRows) {
+          console.log(row);
         }
-        await db.execAsync("INSERT  INTO version (version) VALUES(1)");
-
-        return;
-        AllExercises.forEach((exerciseGroup) => {
-          exerciseGroup.data.forEach(async (exercise) => {
-            try {
-              const back = await db.runAsync(
-                `
-                INSERT OR IGNORE INTO regions (title) VALUES (?)
-              `,
-                exerciseGroup.title
-              );
-              console.log("back: ", back);
-            } catch (error) {
-              console.error(error);
-            }
-
-            try {
-              const res = await db.runAsync(
-                `INSERT INTO exercises (regionId, name, duration, imgURL)
-                   VALUES (
-                     ?,
-                     ?, 
-                     ?, 
-                     ?
-                   )`,
-                [
-                  exerciseGroup.title,
-                  exercise.name,
-                  exercise.duration,
-                  exercise.imgURL,
-                ]
-              );
-            } catch (error) {
-              console.error(error);
-            }
-          });
-        });
       } catch (error) {
-        console.log("errrrrrrrrrrrrrrx");
         console.error(error);
       }
     };
@@ -123,35 +75,69 @@ const home = () => {
     opendb();
   }, []);
 
-  // useEffect(() => {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       "CREATE TABLE IF NOT EXIST names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)"
-  //     );
-  //   });
+  const checkAndInitializeDatabase = async (db: SQLite.SQLiteDatabase) => {
+    try {
+      const versionResult: { version: number } = await db.getFirstAsync(
+        `SELECT version FROM version`
+      );
 
-  //   try {
-  //     db.transaction((tx) => {
-  //       tx.executeSql("SELECT * FROM names", null, (txObj, resultSet) =>
-  //         setNames(resultSet.rows._array)
-  //       );
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
+      const regionId = await db.getAllAsync(`SELECT * FROM regions`);
 
-  //   setIsLoading(false);
-  // }, []);
+      // console.log("regionId: ", regionId);
 
-  return (
-    <View className="w-full h-full justify-center items-center">
-      <TextInput
-        value={currentName}
-        placeholder="name"
-        onChangeText={setCurrentName}
-      />
-    </View>
-  );
+      let currentVersion = 0;
+      if (versionResult) {
+        currentVersion = versionResult.version;
+      } else {
+        await db.runAsync(`INSERT INTO version (version) VALUES (0)`);
+      }
+
+      const CURRENT_VERSION = 1;
+
+      if (currentVersion < CURRENT_VERSION) {
+        await insertIntialData(db);
+        await db.runAsync(`UPDATE version SET version = ?`, [CURRENT_VERSION]);
+      }
+    } catch (error) {
+      console.error("Error checking or initializing database: ", error);
+    }
+  };
+
+  async function insertIntialData(db: SQLite.SQLiteDatabase) {
+    AllExercises.forEach((exerciseGroup) => {
+      exerciseGroup.data.forEach(async (exercise) => {
+        try {
+          const regionInsertResult = await db.runAsync(
+            `
+            INSERT OR IGNORE INTO regions (title) VALUES (?)
+          `,
+            exerciseGroup.title
+          );
+
+          const { id: regionId }: { id: number } = await db.getFirstAsync(
+            `SELECT id FROM regions WHERE title = ?`,
+            [exerciseGroup.title]
+          );
+
+          console.log("regionId: ", regionId);
+          const res = await db.runAsync(
+            `INSERT INTO exercises (regionId, name, duration, imgURL)
+               VALUES (
+                 ?,
+                 ?, 
+                 ?, 
+                 ?
+               )`,
+            [regionId, exercise.name, exercise.duration, exercise.imgURL]
+          );
+
+          // console.log("back: ", regionInsertResult);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    });
+  }
 
   return (
     <View className="bg-[#F8F3FF] h-full  ">

@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
+  Button,
 } from "react-native";
 import React, { useEffect } from "react";
-import { Button, Card } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -19,10 +19,8 @@ const Footer = (): React.ReactElement => (
     // eslint-disable-next-line react/prop-types
     className="border"
   >
-    <Button size="small" status="basic">
-      CANCEL
-    </Button>
-    <Button size="small">ACCEPT</Button>
+    <Button title="Cancel" />
+    <Button title="Accept" />
   </View>
 );
 

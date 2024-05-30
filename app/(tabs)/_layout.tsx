@@ -3,9 +3,9 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { Header } from "react-native/Libraries/NewAppScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 type iconNameType =
   | "home"
   | "home-outline"
@@ -48,13 +48,8 @@ const TabsLayout = () => {
 
             return (
               <>
-                <Ionicons
-                  label
-                  name={iconName}
-                  size={size}
-                  color={"#7F63FB"}
-                  aria-label="xhaha"
-                />
+                <AntDesign name="github" size={24} color="black" />
+                <Text>Hello</Text>
               </>
             );
           },
