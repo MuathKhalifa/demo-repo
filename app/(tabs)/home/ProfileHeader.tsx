@@ -2,6 +2,7 @@ import { View, Text, Image, SafeAreaView } from "react-native";
 import React from "react";
 
 // for the home tab
+//
 const ProfileHeader = () => {
   return (
     <View className="flex flex-row justify-between h-[110px] mx-2">
